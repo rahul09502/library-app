@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container d-flex align-items-center justify-content-between">
+        <div class="navbar-brand">Dept. Library Admin</div>
+        <div>
+          <a class="btn btn-sm btn-outline-info me-2" href="/admin/borrows"><i class="bi bi-journal-bookmark"></i> Borrows</a>
+          <a class="btn btn-sm btn-link" href="/">Back to search</a>
+        </div>
+      </div>
+    </header>
+    <div class="container mt-4">
+      <h2>Admin Dashboard</h2>
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          <ul class="flashes">
+            {% for cat, msg in messages %}
+              <li class="{{cat}}">{{msg}}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      {% endwith %}
+
+      <h3>Add Book</h3>
+      <form method="post" action="/admin/add" class="needs-validation" novalidate>
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="mb-2"><input class="form-control" name="title" placeholder="Title" required></div>
+        <div class="mb-2"><input class="form-control" name="author" placeholder="Author"></div>
+        <div class="mb-2"><input class="form-control" name="year" placeholder="Year" data-validate="int"></div>
+        <div class="mb-2"><input class="form-control" name="isbn" placeholder="ISBN"></div>
+        <div class="mb-2"><input class="form-control" name="copies" placeholder="Copies" value="1" data-validate="int"></div>
+        <div class="mb-2"><input class="form-control" name="department" placeholder="Department"></div>
+        <div style="margin-top:8px"><button class="btn btn-success" type="submit">Add</button></div>
+      </form>
+
+      <h3>Existing Books</h3>
+      <div class="row">
+        {% for b in books %}
+          <div class="col-md-6">
+            <div class="book-card mb-2">
+              <div class="d-flex justify-content-between align-items-start">
+                <div>
+                  <div class="title">{{b.title}}</div>
+                  <div class="meta">{{b.author}} — {{b.year}} — {{b.department}}</div>
+                </div>
+                <div class="text-end">
+                  <a href="/admin/edit/{{b.id}}" class="btn btn-sm btn-outline-primary mb-1">Edit</a>
+                  <form method="post" action="/admin/delete/{{b.id}}">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button class="btn btn-sm btn-danger" type="submit">Delete</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+
+      <p><a href="/admin/logout">Logout</a> · <a href="/">Back to search</a></p>
+    </div>
+  </body>
+</html>

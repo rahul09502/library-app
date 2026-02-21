@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Admin Login</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+  </head>
+  <body>
+    <div class="container">
+      <h2>Admin Login</h2>
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          <ul class="flashes">
+            {% for cat, msg in messages %}
+              <li class="{{cat}}">{{msg}}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      {% endwith %}
+      <form method="post">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div><input name="password" type="password" placeholder="Password" required></div>
+        <div style="margin-top:8px"><button class="btn btn-primary" type="submit">Login</button></div>
+      </form>
+      <p><a href="/">Back to search</a></p>
+    </div>
+  </body>
+</html>
